@@ -1,23 +1,36 @@
-import logo from './logo.svg';
-import './App.css';
+import Coment from "./components/Coment";
+import MyNewComent from "./components/MyNewComent";
+import { GlobalStyle } from "./GlobalStyle";
+import data from './data.json'
+import { useState } from "react";
+import Delete from "./components/Delete";
 
-function App() {
+function App() {    
+  const [deletes, setDeletes] = useState([]);
+  const [comments, setComments] = useState(data.comments)
+  let idNew = 0
+  data.comments.map(comment=>{
+    idNew++
+    idNew+=comment.replies.length
+    return idNew
+  })
+  const [id, setId] = useState(idNew)
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <GlobalStyle/>
+      {deletes.length>0 && <Delete setDeletes={setDeletes} setComments={setComments} deletes={deletes}/>}
+      <section>
+        {comments.map(comment=><Coment comment={comment} 
+        setComments={setComments} 
+        comments={comments} 
+        key={comment.id} 
+        currentUser={data.currentUser}
+        id={id}
+        setId={setId}
+        setDeletes={setDeletes}
+        />)}
+      </section>
+      <MyNewComent currentUser={data.currentUser} setComments={setComments} id={id} setId={setId}/>
     </div>
   );
 }
